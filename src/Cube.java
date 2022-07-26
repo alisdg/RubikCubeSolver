@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Objects;
 
 public class Cube {
     private static final int face_number = 6;
@@ -24,7 +23,7 @@ public class Cube {
             for (int j = 0; j < n; j++) {
                 pieces[j] = new Piece[n];
                 for (int k = 0; k < n; k++) {
-                    pieces[j][k] = new Piece((default_color_orders[i] + j) + k);
+                    pieces[j][k] = new Piece(default_color_orders[i]);
                 }
             }
             this.faces[i] = new Face(n, pieces, face_names[i]);
@@ -93,9 +92,22 @@ public class Cube {
             faces[i].print();
         }
     }
-
+    static int nthLastIndexOf(int nth, String ch, String string) {
+        if (!string.contains(ch)) return -1;
+        if (nth <= 0) return string.length();
+        return nthLastIndexOf(--nth, ch, string.substring(0, string.lastIndexOf(ch)));
+    }
     public String[] getLastMoves(int nth) {
-        String lastMoves = this.moves.substring(nthLastIndexOf(nth, " ", this.moves) + 1);
+        if (this.moves == "")
+            return new String[0];
+        int numberOfMoves = 1;
+        for (int i = 0; i < moves.length(); i++) {
+            if (moves.charAt(i) == ' '){
+                numberOfMoves++;
+            }
+        }
+        int min = Math.min(nth,numberOfMoves);
+        String lastMoves = this.moves.substring(nthLastIndexOf(min, " ", (this.moves)) + 1);
         return lastMoves.split(" ");
     }
 
@@ -325,8 +337,5 @@ public class Cube {
         return result;
     }
 
-    static int nthLastIndexOf(int nth, String ch, String string) {
-        if (nth <= 0) return string.length();
-        return nthLastIndexOf(--nth, ch, string.substring(0, string.lastIndexOf(ch)));
-    }
+
 }
